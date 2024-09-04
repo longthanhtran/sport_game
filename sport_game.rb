@@ -1,5 +1,5 @@
 class SportGame
-  attr_reader :games
+  attr_accessor :games
 
   def load(filename)
     @games = File.read(filename)
@@ -47,9 +47,12 @@ class SportGame
   end
 end
 
-if ARGV.first == '-f'
+
+def process(games = nil)
   sport_game = SportGame.new
-  games = sport_game.load(ARGV.last)
+  sport_game.load(ARGV.last) if games.is_a? Array
+  sport_game.games = games if games.is_a? String
+
   sport_game.declares.sort_by {|game, point|
     -point
   }.each.with_index(1) do |game, idx|
@@ -58,3 +61,12 @@ if ARGV.first == '-f'
   end
 end
 
+# Handle via STDIN (pipeline)
+if data = (STDIN.tty?) ? nil : $stdin.read
+  process(data)
+end
+
+# If the arguments provided
+if ARGV.first == '-f' && ARGV.last
+  process(ARGV)
+end
