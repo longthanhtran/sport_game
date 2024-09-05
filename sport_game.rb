@@ -13,6 +13,7 @@ class SportGame
     regex = /([a-zA-Z\s]+)\s(\d+)/
 
     match.split(",")
+      .filter { |team| regex.match?(team) }
       .map{ |t| regex.match(t).captures }.to_h
       .transform_keys{ |k| k.strip }
       .transform_values(&:to_i)
