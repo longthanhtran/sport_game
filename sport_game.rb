@@ -10,21 +10,19 @@ class Score
       .transform_values(&:to_i)
   end
 
-  def game_result(match)
-    match.values.inject(&:-)
+  def game_result(scores)
+    scores.inject(&:-)
   end
 
   def result(match)
-    result = game_result(match)
+    result = game_result(match.values)
     case
     when result == 0
-      match.transform_values! {|v| v = 1}
+      match = Hash[match.keys.zip([1, 1])]
     when result < 0
-      match[match.first.first] = 0
-      match[match.to_a.last.first] = 3
+      match = Hash[match.keys.zip([0, 3])]
     when result > 0
-      match[match.first.first] = 3
-      match[match.to_a.last.first] = 0
+      match = Hash[match.keys.zip([3, 0])]
     end
     match
   end
