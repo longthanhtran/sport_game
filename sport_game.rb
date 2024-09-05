@@ -1,6 +1,8 @@
 class Score
   attr_accessor :games
 
+  TYPES = {:win => [3, 0], :lose => [0, 3], :draw => [1, 1]}
+
   def rule(match)
     regex = /([a-zA-Z\s]+)\s(\d+)/
 
@@ -16,15 +18,9 @@ class Score
 
   def result(match)
     result = game_result(match.values)
-    case
-    when result == 0
-      match = Hash[match.keys.zip([1, 1])]
-    when result < 0
-      match = Hash[match.keys.zip([0, 3])]
-    when result > 0
-      match = Hash[match.keys.zip([3, 0])]
-    end
-    match
+    return Hash[match.keys.zip(TYPES[:draw])] if result == 0
+    return Hash[match.keys.zip(TYPES[:lose])] if result < 0
+    Hash[match.keys.zip(TYPES[:win])]
   end
 
   def declares
