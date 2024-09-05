@@ -1,22 +1,17 @@
-class SportGame
+class Score
   attr_accessor :games
-
-  def load(filename)
-    @games = File.read(filename)
-  end
-
-  def parse
-    @games.split("\n")
-  end
 
   def rule(match)
     regex = /([a-zA-Z\s]+)\s(\d+)/
 
     match.split(",")
       .filter { |team| regex.match?(team) }
-      .map{ |t| regex.match(t).captures }.to_h
-      .transform_keys{ |k| k.strip }
+      .map{ |t| regex.match(t.strip).captures }.to_h
       .transform_values(&:to_i)
+  end
+
+  def game_result(match)
+    match.values.inject(&:-)
   end
 
   def result(match)
@@ -34,17 +29,27 @@ class SportGame
     match
   end
 
-  def game_result(match)
-    match.values.inject(&:-)
-  end
-
   def declares
-    parse.map { |match| result(rule(match)) }
+    @games.map { |match| result(rule(match)) }
       .inject({}) { |source, target|
         source.merge(target) { |key, value_1, value_2|
           value_1 + value_2
         }
       }
+  end
+end
+
+class SportGame
+  attr_accessor :games
+
+  def load(filename)
+    @games = File.read(filename).split("\n")
+  end
+
+  def score
+    scorer = Score.new
+    scorer.games = @games
+    scorer.declares
   end
 end
 
@@ -54,8 +59,8 @@ def process(games = nil)
   sport_game.load(ARGV.last) if games.is_a? Array
   sport_game.games = games if games.is_a? String
 
-  sport_game.declares.sort_by {|game, point|
-    -point
+  sport_game.score.sort_by {|game, point|
+    [-point, game]
   }.each.with_index(1) do |game, idx|
     point = game.last != 1 ? "pts" : "pt"
     puts "#{idx}. #{game.first}, #{game.last} #{point}"
