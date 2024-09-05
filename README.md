@@ -3,23 +3,23 @@
 ## Instructions
 - The script can handle via arguments or stdin, see below samples. Output provided per the first option.
 
-```sh
-$ ruby sport_game.rb -f input.txt # arguments
+```shell
+$ruby sport_game.rb -f input.txt # arguments
 1. Tarantulas, 6 pts
 2. Lions, 5 pts
 3. Snakes, 1 pt
 4. FC Awesome, 1 pt
 5. Grouches, 0 pt
 
-$ cat input.txt | ruby sport_game.rb
+$cat input.txt | ruby sport_game.rb
 
-$ ruby sport_game.rb < input.txt
+$ruby sport_game.rb < input.txt
 ```
 
-- Tests are ready via minitest
+- Tests are ready via minitest and rake
 
-```sh
-$ ruby test_sport_game.rb
+```shell
+$rake
 Run options: --seed 35759
 
 # Running:
