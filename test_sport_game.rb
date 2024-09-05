@@ -35,6 +35,13 @@ describe SportGame do
       _(@sport_game.declares).must_equal(expected)
     end
 
+    it "should drop malform lines from final result" do
+      match = "Lions: 3, Snakes; 3"
+      expected = {}
+
+      _(@sport_game.rule(match)).must_equal(expected)
+    end
+
     it "should rule out the match" do
       match = "Lions 3, Snakes 3"
       expected = {"Lions" => 3, "Snakes" => 3}
