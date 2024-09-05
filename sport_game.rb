@@ -56,7 +56,7 @@ def process(games = nil)
   sport_game.declares.sort_by {|game, point|
     -point
   }.each.with_index(1) do |game, idx|
-    point = game.last > 1 ? "pts" : "pt"
+    point = game.last != 1 ? "pts" : "pt"
     puts "#{idx}. #{game.first}, #{game.last} #{point}"
   end
 end
